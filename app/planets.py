@@ -28,3 +28,30 @@ def get_all_planets():
             }
         response.append(planet_dict)
     return jsonify(response), 200
+
+# single planet 
+
+@planet_bp.route("/<planet_id>", methods=["GET"])
+
+def get_one_planet(planet_id):
+    try:
+        planet_id = int(planet_id)
+    except ValueError:
+        response = f"Invalid planet ID {planet_id}. ID must be an integer"
+        return jsonify(response), 400
+
+    for planet in planets:
+        if planet.id == planet_id:
+            planet_dict = {
+            "id": planet.id,
+            "name": planet.name,
+            "description": planet.description,
+            "size": planet.size
+            }
+            return jsonify(planet_dict), 200
+ 
+    response_message = f"Planet ID {planet_id} not found."
+    return jsonify(response_message), 404
+
+
+
