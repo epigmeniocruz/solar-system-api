@@ -11,7 +11,7 @@ planets = [
     Planet(1, "Auberon", "rocky", 10000),
     Planet(2, "Jerica", "icy", 20000),
     Planet(3, "Nancy", "hot", 5000),
-    Planet(4, "Gowen", "sandy", 30000),
+    Planet(4, "Goeun", "sandy", 30000),
 ]
 
 planet_bp = Blueprint("planet_bp", __name__, url_prefix="/planet")
