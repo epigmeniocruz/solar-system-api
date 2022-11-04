@@ -3,19 +3,6 @@ from app import db
 from app.models.planets import Planet
 
 
-# class Planet:
-#     def __init__(self, id, name, description, size):
-#         self.id = id
-#         self.name = name
-#         self.description = description
-#         self.size = size
-
-# planets = [
-#     Planet(1, "Auberon", "rocky", 10000),
-#     Planet(2, "Jerica", "icy", 20000),
-#     Planet(3, "Nancy", "hot", 5000),
-#     Planet(4, "Goeun", "sandy", 30000),
-# ]
 
 planet_bp = Blueprint("planet_bp", __name__, url_prefix="/planet")
 
@@ -32,7 +19,6 @@ def add_planet():
     db.session.commit()
 
     return {"id": new_planet.id}, 201
-
 
 
 
