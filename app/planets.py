@@ -1,8 +1,7 @@
 from flask import Blueprint, jsonify, request
 from app import db
 from app.models.planets import Planet
-
-
+from app.routes_helper import get_one_obj_or_abort
 
 planet_bp = Blueprint("planet_bp", __name__, url_prefix="/planet")
 
@@ -20,10 +19,7 @@ def add_planet():
 
     return {"id": new_planet.id}, 201
 
-
-
 @planet_bp.route("", methods=["GET"])
-
 def get_all_planets():
     planets = Planet.query.all()
     response = []
@@ -37,29 +33,33 @@ def get_all_planets():
         response.append(planet_dict)
     return jsonify(response), 200
 
-# # single planet 
 
-# @planet_bp.route("/<planet_id>", methods=["GET"])
+@planet_bp.route("/<planet_id>", methods=["GET"])
+def get_one_bike(planet_id):
 
-# def get_one_planet(planet_id):
-#     try:
-#         planet_id = int(planet_id)
-#     except ValueError:
-#         response = f"Invalid planet ID {planet_id}. ID must be an integer"
-#         return jsonify(response), 400
+    chosen_planet = get_one_obj_or_abort(Planet, planet_id)
 
-#     for planet in planets:
-#         if planet.id == planet_id:
-#             planet_dict = {
-#             "id": planet.id,
-#             "name": planet.name,
-#             "description": planet.description,
-#             "size": planet.size
-#             }
-#             return jsonify(planet_dict), 200
- 
-#     response_message = f"Planet ID {planet_id} not found."
-#     return jsonify(response_message), 404
+    planet_dict = chosen_planet.to_dict()
+
+    return jsonify(planet_dict), 200
 
 
+@planet_bp.route("/<planet_id>", methods=["PUT"])
+def update_planet_with_new_vals(planet_id):
 
+    chosen_planet = get_one_obj_or_abort(Planet, planet_id)
+
+    request_body = request.get_json()
+
+    if "name" not in request_body or \
+        "description" not in request_body or \
+        "size" not in request_body:
+            return jsonify({"message":"Request must include name, description, and size."}), 400
+
+    chosen_planet.name = request_body["name"]
+    chosen_planet.description = request_body["description"]
+    chosen_planet.size= request_body["size"]
+
+    db.session.commit()
+
+    return jsonify({f"message": f"Successfully replaced planet with id `{planet_id}`"}), 200
