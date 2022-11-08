@@ -36,7 +36,6 @@ def add_planet():
     return {"id": new_planet.id}, 201
 
 @planet_bp.route("", methods=["GET"])
-
 def get_all_planets():
     planets = Planet.query.all()
     response = []
